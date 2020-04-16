@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ public class QuickArithmetic : MonoBehaviour {
             KMSelectable pressedArrow = Arrow;
             Arrow.OnInteract += delegate () { ArrowPress(pressedArrow); return false; };
         }
-		
+
         Submit.OnInteract += delegate () { PressSugma(); return false; };
     }
 
@@ -70,15 +70,15 @@ public class QuickArithmetic : MonoBehaviour {
 			GetComponent<KMBombModule>().HandlePass();
 			StopAllCoroutines();
 			moduleSolved = true;
-			
+
 			if (FinalPenileLength == 69)
 			{
 				Mainfatass.text = ";)";
 			}
-			
+
 			else
 			{
-				Mainfatass.text = " ";
+				Mainfatass.text = "!";
 			}
 		}
 		else
@@ -189,18 +189,18 @@ public class QuickArithmetic : MonoBehaviour {
 		yield return new WaitForSeconds(1);
 		StartCoroutine(Ibecyclingthesebitches());
 	}
-	
+
 	//twitch plays
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use the command !{0} number [NUMBER] to change the displayed number in the module (The number typed must be two digits long. If the number is one digit, start with 0) | To submit your answer, type !{0} submit.";
+    private readonly string TwitchHelpMessage = @"Use the command !{0} select [NUMBER] to change the displayed number in the module (The number typed must be two digits long. If the number is one digit, start with 0) | To submit your answer, type !{0} submit.";
     #pragma warning restore 414
-	
+
 	string[] GodDamnNumbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-	
+
 	IEnumerator ProcessTwitchCommand(string command)
 	{
 		string[] parameters = command.Split(' ');
-		if (Regex.IsMatch(parameters[0], @"^\s*number\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+		if (Regex.IsMatch(parameters[0], @"^\s*select\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
 		{
 			yield return null;
 			if (parameters.Length != 2)
@@ -208,13 +208,13 @@ public class QuickArithmetic : MonoBehaviour {
 				yield return "sendtochaterror Parameter length is invalid.";
 				yield break;
 			}
-			
+
 			else if (parameters[1].Length != 2)
 			{
 				yield return "sendtochaterror Number length is too short/long";
 				yield break;
 			}
-			
+
 			foreach (char c in parameters[1])
 			{
 				if (!c.ToString().EqualsAny(GodDamnNumbers))
@@ -223,7 +223,7 @@ public class QuickArithmetic : MonoBehaviour {
 					yield break;
 				}
 			}
-			
+
 			int Numberer = 0;
 			foreach (char c in parameters[1])
 			{
@@ -236,7 +236,7 @@ public class QuickArithmetic : MonoBehaviour {
 					}
 					Numberer++;
 				}
-				
+
 				else if (Numberer == 1)
 				{
 					while (Rightasscheek.text != c.ToString())
@@ -248,7 +248,7 @@ public class QuickArithmetic : MonoBehaviour {
 				}
 			}
 		}
-		
+
 		if (Regex.IsMatch(command, @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
 		{
 			yield return null;
