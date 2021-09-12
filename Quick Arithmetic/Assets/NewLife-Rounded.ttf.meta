@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 27bd040063b3d1e4c85153efae59fbae
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: NewLife-Rounded
+  fontNames:
+  - NewLife-Rounded
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: cc76a47e9f446c44e8209ef39abbde21, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
