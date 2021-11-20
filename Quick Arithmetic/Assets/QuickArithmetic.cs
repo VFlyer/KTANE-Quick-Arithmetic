@@ -129,8 +129,13 @@ public class QuickArithmetic : MonoBehaviour {
                TempPrimary[i] = TempPrimary[i] * TempSecondary[i] % 10;
                break;
             case 3:                             //Y
+               if (TempSecondary[i] == TempPrimary[i] * 2 && TempSecondary[i] != 0) {  //Why the fuck does Math.Round not round .5 up
+                  TempPrimary[i] = 1;
+                  break;
+               }
                if (TempSecondary[i] != 0) {
                   TempPrimary[i] = (int) Math.Round(((double) TempPrimary[i]) / TempSecondary[i]);
+                  break;
                }
                break;
             case 4:                             //W
