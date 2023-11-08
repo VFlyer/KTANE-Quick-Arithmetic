@@ -114,7 +114,7 @@ public class QuickArithmetic : MonoBehaviour {
       GenerateSequences();
    }
 
-   void Calculate () {
+   bool Calculate () {
       for (int i = 0; i < 8; i++) {
          int[] SequenceShifter = new int[8];
          int TempSwap = 0;
@@ -202,8 +202,11 @@ public class QuickArithmetic : MonoBehaviour {
       }
       for (int i = 0; i < 8; i++) {
          TempPrimary[i] = Math.Abs(TempPrimary[i] + TempSecondary[i]);
+         if (TempPrimary[i] > 27)
+            return false;
          Answers[i] = Table[TempPrimary[i]];
       }
+      return true;
    }
 
    void GenerateSequences () {
@@ -226,6 +229,13 @@ public class QuickArithmetic : MonoBehaviour {
          TempPrimary[i] = LeftSequenceN[i];
          TempSecondary[i] = RightSequence[i];
       }
+      Debug.LogFormat("[Quick Arithmetic #{0}] The generated primary sequence is {1}{2} {3}{4} {5}{6} {7}{8} {9}{10} {11}{12} {13}{14} {15}{16}.", ModuleId, "RBGYWKOIPCN"[ColorSequence[0]], LeftSequenceN[0], "RBGYWKOIPCN"[ColorSequence[1]], LeftSequenceN[1], "RBGYWKOIPCN"[ColorSequence[2]], LeftSequenceN[2], "RBGYWKOIPCN"[ColorSequence[3]], LeftSequenceN[3], "RBGYWKOIPCN"[ColorSequence[4]], LeftSequenceN[4], "RBGYWKOIPCN"[ColorSequence[5]], LeftSequenceN[5], "RBGYWKOIPCN"[ColorSequence[6]], LeftSequenceN[6], "RBGYWKOIPCN"[ColorSequence[7]], LeftSequenceN[7]);
+      Debug.LogFormat("[Quick Arithmetic #{0}] The generated secondary sequence is {1}{2}{3}{4}{5}{6}{7}{8}.", ModuleId, RightSequence[0], RightSequence[1], RightSequence[2], RightSequence[3], RightSequence[4], RightSequence[5], RightSequence[6], RightSequence[7]);
+      if (!Calculate()) {
+         Debug.LogFormat("[Quick Arithmetic #{0}] One of the numbers ended up greater than 27, regenerating...", ModuleId);
+         goto HOWRestart;
+      }
+      Debug.LogFormat("[Quick Arithmetic #{0}] The answers are {1} {2} {3} {4} {5} {6} {7} {8}.", ModuleId, Answers[0].ToString("00"), Answers[1].ToString("00"), Answers[2].ToString("00"), Answers[3].ToString("00"), Answers[4].ToString("00"), Answers[5].ToString("00"), Answers[6].ToString("00"), Answers[7].ToString("00"));
       if (Rnd.Range(0, 2) == 0) {//0 means left display is faster.
          LDisplaySequences = StartCoroutine(Flash(Displays[0], true, true));
          RDisplaySequences = StartCoroutine(Flash(Displays[1], false, false));
@@ -234,10 +244,6 @@ public class QuickArithmetic : MonoBehaviour {
          LDisplaySequences = StartCoroutine(Flash(Displays[0], false, true));
          RDisplaySequences = StartCoroutine(Flash(Displays[1], true, false));
       }
-      Debug.LogFormat("[Quick Arithmetic #{0}] The generated primary sequence is {1}{2} {3}{4} {5}{6} {7}{8} {9}{10} {11}{12} {13}{14} {15}{16}.", ModuleId, "RBGYWKOIPCN"[ColorSequence[0]], LeftSequenceN[0], "RBGYWKOIPCN"[ColorSequence[1]], LeftSequenceN[1], "RBGYWKOIPCN"[ColorSequence[2]], LeftSequenceN[2], "RBGYWKOIPCN"[ColorSequence[3]], LeftSequenceN[3], "RBGYWKOIPCN"[ColorSequence[4]], LeftSequenceN[4], "RBGYWKOIPCN"[ColorSequence[5]], LeftSequenceN[5], "RBGYWKOIPCN"[ColorSequence[6]], LeftSequenceN[6], "RBGYWKOIPCN"[ColorSequence[7]], LeftSequenceN[7]);
-      Debug.LogFormat("[Quick Arithmetic #{0}] The generated secondary sequence is {1}{2}{3}{4}{5}{6}{7}{8}.", ModuleId, RightSequence[0], RightSequence[1], RightSequence[2], RightSequence[3], RightSequence[4], RightSequence[5], RightSequence[6], RightSequence[7]);
-      Calculate();
-      Debug.LogFormat("[Quick Arithmetic #{0}] The answers are {1} {2} {3} {4} {5} {6} {7} {8}.", ModuleId, Answers[0].ToString("00"), Answers[1].ToString("00"), Answers[2].ToString("00"), Answers[3].ToString("00"), Answers[4].ToString("00"), Answers[5].ToString("00"), Answers[6].ToString("00"), Answers[7].ToString("00"));
    }
    
    void GenerationHelper (int[] Sequence) {
