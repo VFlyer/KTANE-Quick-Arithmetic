@@ -134,7 +134,7 @@ public class QuickArithmetic : MonoBehaviour {
                   break;
                }
                if (TempSecondary[i] != 0) {
-                  TempPrimary[i] = (int) Math.Round(((double) TempPrimary[i]) / TempSecondary[i]);
+                  TempPrimary[i] = (int) Math.Round(((double) TempPrimary[i]) / TempSecondary[i], MidpointRounding.AwayFromZero);
                   break;
                }
                break;
