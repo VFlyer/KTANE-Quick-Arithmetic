@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: QuickArithmetic
   title: Quick Arithmetic
-  author: Deaf
+  author: Deaf, VFlyer
   description: 'It seems the sequences are in a relay race, with no clear end in sight.
 
 
@@ -23,7 +23,7 @@ MonoBehaviour:
     Manual can be found at ktane.timwi.de or in the manuals folder of your game.
 
 
-    If there are any bugs, contact Fartlicker777#9169 on Discord.'
-  version: 1.0
+    If there are any bugs, contact VFlyer on the KTANE Discord.'
+  version: 1.0.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 785560a6906e4ca4c8bdb82f82d8142e, type: 3}

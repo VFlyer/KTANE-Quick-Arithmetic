@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Rnd = UnityEngine.Random;
 
@@ -68,7 +70,8 @@ public class QuickArithmetic : MonoBehaviour {
       if (ModuleSolved) {
          return;
       }
-      if (int.Parse(InputDisplays[0].text) * 10 + int.Parse(InputDisplays[1].text) == Answers[SubmissionIndex]) {
+        var valueSubmitted = int.Parse(InputDisplays[0].text) * 10 + int.Parse(InputDisplays[1].text);
+      if (valueSubmitted == Answers[SubmissionIndex]) {
          LEDs[SubmissionIndex].GetComponent<MeshRenderer>().material = Lit;
          SubmissionIndex++;
          if (SubmissionIndex == 8) {
@@ -81,7 +84,8 @@ public class QuickArithmetic : MonoBehaviour {
          }
       }
       else {
-         GetComponent<KMBombModule>().HandleStrike();
+            Debug.LogFormat("[Quick Arithmetic #{0}] For the {2} number, it is not {1}.", ModuleId, valueSubmitted, new[] { "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th" }[SubmissionIndex]);
+            GetComponent<KMBombModule>().HandleStrike();
       }
    }
 
@@ -302,52 +306,74 @@ public class QuickArithmetic : MonoBehaviour {
    #region TP
 
 #pragma warning disable 414
-   private readonly string TwitchHelpMessage = @"Use !{0} ## to submit a number.";
+   private readonly string TwitchHelpMessage = "Use \"!{0} ##\" to submit a number, or \"!{0} ## ##\" to submit multiple numbers. \"Submit\" is optional.";
 #pragma warning restore 414
 
    IEnumerator ProcessTwitchCommand (string Command) {
-      yield return null;
-      if (Command.RegexMatch("[0-9][0-9]")) {
-         if (int.Parse(InputDisplays[0].text) - int.Parse(Command[0].ToString()) != 0) {
-            if ((int.Parse(InputDisplays[0].text) - int.Parse(Command[0].ToString()) <= 5 && int.Parse(InputDisplays[0].text) - int.Parse(Command[0].ToString()) > 0) || (int.Parse(InputDisplays[0].text) - int.Parse(Command[0].ToString()) <= -5 && int.Parse(InputDisplays[0].text) - int.Parse(Command[0].ToString()) < 0)) {
-               while (Command[0].ToString() != InputDisplays[0].text) {
-                  Arrows[2].OnInteract();
-                  yield return new WaitForSeconds(.1f);
-               }
+        var intCmd = Command;
+        var matchSubmitStart = Regex.Match(Command, @"^submit\s*", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (matchSubmitStart.Success)
+            intCmd = intCmd.Skip(matchSubmitStart.Value.Length).Join("");
+        var matchDigits = Regex.Match(intCmd, @"^([0-9][0-9]\s*)+", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+      if (matchDigits.Success) {
+            var matchValues = Regex.Matches(intCmd, @"[0-9][0-9]", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            yield return null;
+            var matchCountCur = 0;
+            foreach (Match num in matchValues)
+            {
+                var strValue = num.Value;
+                if (int.Parse(InputDisplays[0].text) - int.Parse(strValue.ToString()) != 0)
+                {
+                    if ((int.Parse(InputDisplays[0].text) - int.Parse(strValue.ToString()) <= 5 && int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) > 0) || (int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) <= -5 && int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) < 0))
+                    {
+                        while (strValue[0].ToString() != InputDisplays[0].text)
+                        {
+                            Arrows[2].OnInteract();
+                            yield return new WaitForSeconds(.1f);
+                        }
+                    }
+                    else
+                    {
+                        while (strValue[0].ToString() != InputDisplays[0].text)
+                        {
+                            Arrows[0].OnInteract();
+                            yield return new WaitForSeconds(.1f);
+                        }
+                    }
+                }
+                if (int.Parse(InputDisplays[1].text) - int.Parse(strValue[1].ToString()) != 0)
+                {
+                    if (int.Parse(InputDisplays[1].text) - int.Parse(strValue[1].ToString()) >= 5 || int.Parse(InputDisplays[1].text) - int.Parse(strValue[1].ToString()) <= -5)
+                    {
+                        while (strValue[1].ToString() != InputDisplays[1].text)
+                        {
+                            Arrows[3].OnInteract();
+                            yield return new WaitForSeconds(.1f);
+                        }
+                    }
+                    else
+                    {
+                        while (strValue[1].ToString() != InputDisplays[1].text)
+                        {
+                            Arrows[1].OnInteract();
+                            yield return new WaitForSeconds(.1f);
+                        }
+                    }
+                }
+                matchCountCur++;
+                if (int.Parse(strValue) != Answers[SubmissionIndex] && matchValues.Count > 1)
+                    yield return string.Format("strikemessage incorrectly submitting {0} after attempting to submit {1} number(s) in the command provided!", strValue, matchCountCur);
+                Submit.OnInteract();
+                yield return new WaitForSeconds(.1f);
             }
-            else {
-               while (Command[0].ToString() != InputDisplays[0].text) {
-                  Arrows[0].OnInteract();
-                  yield return new WaitForSeconds(.1f);
-               }
-            }
-         }
-         if (int.Parse(InputDisplays[1].text) - int.Parse(Command[1].ToString()) != 0) {
-            if (int.Parse(InputDisplays[1].text) - int.Parse(Command[1].ToString()) >= 5 || int.Parse(InputDisplays[1].text) - int.Parse(Command[1].ToString()) <= -5) {
-               while (Command[1].ToString() != InputDisplays[1].text) {
-                  Arrows[3].OnInteract();
-                  yield return new WaitForSeconds(.1f);
-               }
-            }
-            else {
-               while (Command[1].ToString() != InputDisplays[1].text) {
-                  Arrows[1].OnInteract();
-                  yield return new WaitForSeconds(.1f);
-               }
-            }
-         }
-         Submit.OnInteract();
-         yield return new WaitForSeconds(.1f);
       }
       else {
-         yield return "sendtochaterror I don't understand!";
+         yield return string.Format("sendtochaterror I don't understand what you mean by \"{0}\"!", Command);
       }
    }
 
    IEnumerator TwitchHandleForcedSolve () {
-      for (int i = 0; i < 8; i++) {
-         yield return ProcessTwitchCommand(Answers[i].ToString("00"));
-      }
+        yield return ProcessTwitchCommand(Answers.Skip(SubmissionIndex).Select(a => a.ToString("00")).Join());
    }
    #endregion
 }
