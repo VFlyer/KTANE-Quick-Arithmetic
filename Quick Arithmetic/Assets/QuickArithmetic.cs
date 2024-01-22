@@ -291,7 +291,7 @@ public class QuickArithmetic : MonoBehaviour {
 
    IEnumerator Fade () {
       while (Opacity != 0) {
-         Displays[0].color = new Color32(Colors[ColorSequence[FinalColor]][0], Colors[ColorSequence[FinalColor]][1], Colors[ColorSequence[FinalColor]][2], Opacity);
+         Displays[0].color = FinalColor.InRange(0, 8) ? new Color32(Colors[ColorSequence[FinalColor]][0], Colors[ColorSequence[FinalColor]][1], Colors[ColorSequence[FinalColor]][2], Opacity) : (Color32)Color.clear;
          Displays[1].color = new Color32(255, 255, 255, Opacity);
          for (int i = 0; i < 2; i++) {
             InputDisplays[i].color = new Color32(255, 255, 255, Opacity);
@@ -322,9 +322,9 @@ public class QuickArithmetic : MonoBehaviour {
             foreach (Match num in matchValues)
             {
                 var strValue = num.Value;
-                if (int.Parse(InputDisplays[0].text) - int.Parse(strValue.ToString()) != 0)
+                if (int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) != 0)
                 {
-                    if ((int.Parse(InputDisplays[0].text) - int.Parse(strValue.ToString()) <= 5 && int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) > 0) || (int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) <= -5 && int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) < 0))
+                    if ((int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) <= 5 && int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) > 0) || (int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) <= -5 && int.Parse(InputDisplays[0].text) - int.Parse(strValue[0].ToString()) < 0))
                     {
                         while (strValue[0].ToString() != InputDisplays[0].text)
                         {

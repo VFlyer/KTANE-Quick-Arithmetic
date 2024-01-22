@@ -24,6 +24,6 @@ MonoBehaviour:
 
 
     If there are any bugs, contact VFlyer on the KTANE Discord.'
-  version: 1.0.1
+  version: 1.0.2
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 785560a6906e4ca4c8bdb82f82d8142e, type: 3}
